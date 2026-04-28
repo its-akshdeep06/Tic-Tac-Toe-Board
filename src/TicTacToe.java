@@ -1,53 +1,32 @@
-import java.util.Random;
+import java.util.Scanner;
 
 /**
  * TicTacToe
- * UC2 performs a random toss to decide who plays first and assigns
- * symbols (X or O) to the human and computer accordingly.
+ * UC3 reads a slot number (1–9) entered by the user. This use case
+ * focuses only on input handling without validation.
  */
 public class TicTacToe {
 
-    static boolean isHumanTurn;
-    static char humanSymbol;
-    static char computerSymbol;
-
     /**
-     * Entry point of the program. Executes the toss logic and displays
-     * the result of turn and symbol assignment.
+     * Entry point of the program. Reads slot input and prints it back
+     * to verify correct user input handling.
      */
     public static void main(String[] args) {
-        tossAndAssignSymbols();
-        displayTossResult();
+        int slot = getUserSlot();
+        System.out.println("Slot entered: " + slot);
     }
 
     /**
-     * Uses random logic to decide the first player and assigns symbols
-     * based on the toss outcome. This method initializes the game state.
+     * Reads an integer slot value from the user.
+     * Input: Scanner object
+     * Output: Slot number (1–9)
+     * Hint: Validation will be added in later use cases.
      */
-    static void tossAndAssignSymbols() {
-        Random random = new Random();
-        int toss = random.nextInt(2); // 0 = Human wins toss, 1 = Computer wins toss
-
-        if (toss == 0) {
-            isHumanTurn = true;
-            humanSymbol = 'X';
-            computerSymbol = 'O';
-        } else {
-            isHumanTurn = false;
-            computerSymbol = 'X';
-            humanSymbol = 'O';
-        }
-    }
-
-    /**
-     * Displays the toss result, indicating who plays first and which
-     * symbol is assigned to each player.
-     */
-    static void displayTossResult() {
-        System.out.println("=== Toss Result ===");
-        System.out.println("Human Symbol   : " + humanSymbol);
-        System.out.println("Computer Symbol: " + computerSymbol);
-        System.out.println("First Turn     : " + (isHumanTurn ? "Human" : "Computer"));
-        System.out.println("===================");
+    static int getUserSlot() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a slot number (1-9): ");
+        int slot = scanner.nextInt();
+        scanner.close();
+        return slot;
     }
 }

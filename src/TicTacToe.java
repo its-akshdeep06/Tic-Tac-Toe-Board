@@ -1,35 +1,33 @@
 /**
  * TicTacToe
- * UC4 converts a user-entered slot number (1–9) into corresponding
- * row and column indices of a 2D array.
+ * UC5 validates whether a move is inside the board boundaries
+ * and whether the selected cell is empty.
  */
 public class TicTacToe {
 
+    static char[][] board = {
+        {'-', '-', '-'},
+        {'-', '-', '-'},
+        {'-', '-', '-'}
+    };
+
     /**
-     * Entry point of the program. Demonstrates slot-to-index conversion
-     * using a sample slot value.
+     * Entry point of the program. Tests the validation logic
+     * using sample row and column values.
      */
     public static void main(String[] args) {
-        int slot = 7;
-        System.out.println("Row: " + getRowFromSlot(slot));
-        System.out.println("Column: " + getColFromSlot(slot));
+        System.out.println(isValidMove(1, 1)); // true — center cell is empty
     }
 
     /**
-     * Converts slot number into row index using zero-based indexing.
-     * Input: Slot number (1–9)
-     * Output: Row index (0–2)
+     * Checks if the given row and column are within bounds
+     * and if the target cell is empty.
+     * Input: Row, Column
+     * Output: true if valid, false otherwise.
      */
-    static int getRowFromSlot(int slot) {
-        return (slot - 1) / 3;
-    }
-
-    /**
-     * Converts slot number into column index using modulo operation.
-     * Input: Slot number (1–9)
-     * Output: Column index (0–2)
-     */
-    static int getColFromSlot(int slot) {
-        return (slot - 1) % 3;
+    static boolean isValidMove(int row, int col) {
+        if (row < 0 || row > 2) return false;
+        if (col < 0 || col > 2) return false;
+        return board[row][col] == '-';
     }
 }

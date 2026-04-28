@@ -1,27 +1,61 @@
+import java.util.Random;
+
 /**
  * TicTacToe
- * UC6 places a player's symbol on the board at the given position.
- * This use case focuses on updating game state.
+ * UC7 allows the computer to make a random valid move
+ * by reusing slot conversion and validation logic.
  */
 public class TicTacToe {
 
-    static char[][] board = new char[3][3];
+    static char[][] board = {
+        {'-', '-', '-'},
+        {'-', '-', '-'},
+        {'-', '-', '-'}
+    };
+    static char computerSymbol = 'O';
 
     /**
-     * Entry point of the program. Places a sample move
-     * and prints the updated cell value.
+     * Entry point of the program. Triggers the computer move.
      */
     public static void main(String[] args) {
-        placeMove(0, 0, 'X');
-        System.out.println(board[0][0]); // Expected: X
+        computerMove();
     }
 
     /**
-     * Updates the board by placing the given symbol at
-     * the specified row and column.
-     * Input: Row, Column, Symbol
-     * Hint: Assume the move is already validated.
+     * Generates random slot values until a valid move is found,
+     * then places the computer symbol on the board.
      */
+    static void computerMove() {
+        Random random = new Random();
+        int row, col;
+
+        do {
+            int slot = random.nextInt(9) + 1;   // generates 1–9
+            row = getRowFromSlot(slot);
+            col = getColFromSlot(slot);
+        } while (!isValidMove(row, col));
+
+        placeMove(row, col, computerSymbol);
+        System.out.println("Computer placed '" + computerSymbol + "' at row " + row + ", col " + col);
+    }
+
+    // ── Reused from UC4 ──────────────────────────────────────────
+    static int getRowFromSlot(int slot) {
+        return (slot - 1) / 3;
+    }
+
+    static int getColFromSlot(int slot) {
+        return (slot - 1) % 3;
+    }
+
+    // ── Reused from UC5 ──────────────────────────────────────────
+    static boolean isValidMove(int row, int col) {
+        if (row < 0 || row > 2) return false;
+        if (col < 0 || col > 2) return false;
+        return board[row][col] == '-';
+    }
+
+    // ── Reused from UC6 ──────────────────────────────────────────
     static void placeMove(int row, int col, char symbol) {
         board[row][col] = symbol;
     }

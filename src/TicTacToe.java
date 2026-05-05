@@ -1,62 +1,84 @@
-import java.util.Random;
-
 /**
  * TicTacToe
- * UC7 allows the computer to make a random valid move
- * by reusing slot conversion and validation logic.
+ * UC8 controls the continuous game loop and alternates
+ * turns until the game ends.
  */
 public class TicTacToe {
 
-    static char[][] board = {
-        {'-', '-', '-'},
-        {'-', '-', '-'},
-        {'-', '-', '-'}
-    };
-    static char computerSymbol = 'O';
+    static boolean isHumanTurn = true;
+    static boolean gameOver = false;
+
+    // --- Assumed to exist from UC1–UC7 ---
+    static char[][] board = new char[3][3];
+    static char humanSymbol;
+    static char computerSymbol;
 
     /**
-     * Entry point of the program. Triggers the computer move.
+     * Entry point of the program. Demonstrates the structure
+     * of a continuous game loop.
      */
     public static void main(String[] args) {
-        computerMove();
+        initializeBoard();
+        tossAndAssignSymbols();
+        displayTossResult();
+        printBoard();
+
+        startGameLoop();
     }
 
     /**
-     * Generates random slot values until a valid move is found,
-     * then places the computer symbol on the board.
+     * UC8 Core: Runs the game loop, alternating turns between human
+     * and computer until a win or draw condition is detected.
      */
-    static void computerMove() {
-        Random random = new Random();
-        int row, col;
+    static void startGameLoop() {
+        int totalMoves = 0; // tracks filled cells to detect draw
 
-        do {
-            int slot = random.nextInt(9) + 1;   // generates 1–9
-            row = getRowFromSlot(slot);
-            col = getColFromSlot(slot);
-        } while (!isValidMove(row, col));
+        while (!gameOver) {
 
-        placeMove(row, col, computerSymbol);
-        System.out.println("Computer placed '" + computerSymbol + "' at row " + row + ", col " + col);
+            if (isHumanTurn) {
+                System.out.println("\n>> Your turn (" + humanSymbol + ")");
+                humanMove();
+            } else {
+                System.out.println("\n>> Computer's turn (" + computerSymbol + ")");
+                computerMove();
+            }
+
+            totalMoves++;
+            printBoard();
+
+            // Check win
+            if (checkWin(isHumanTurn ? humanSymbol : computerSymbol)) {
+                if (isHumanTurn) {
+                    System.out.println("🎉 You win!");
+                } else {
+                    System.out.println("💻 Computer wins!");
+                }
+                gameOver = true;
+
+            // Check draw
+            } else if (totalMoves == 9) {
+                System.out.println("🤝 It's a draw!");
+                gameOver = true;
+
+            // Switch turn
+            } else {
+                isHumanTurn = !isHumanTurn;
+            }
+        }
+
+        System.out.println("Game Over. Thanks for playing!");
     }
 
-    // ── Reused from UC4 ──────────────────────────────────────────
-    static int getRowFromSlot(int slot) {
-        return (slot - 1) / 3;
-    }
+    // -------------------------------------------------------
+    // Stub placeholders — implemented in UC3–UC7
+    // -------------------------------------------------------
 
-    static int getColFromSlot(int slot) {
-        return (slot - 1) % 3;
-    }
+    static void initializeBoard() { /* UC1 */ }
+    static void tossAndAssignSymbols() { /* UC2 */ }
+    static void displayTossResult() { /* UC2 */ }
+    static void printBoard() { /* UC1 */ }
+    static void humanMove() { /* UC3 */ }
+    static void computerMove() { /* UC4/UC5 */ }
 
-    // ── Reused from UC5 ──────────────────────────────────────────
-    static boolean isValidMove(int row, int col) {
-        if (row < 0 || row > 2) return false;
-        if (col < 0 || col > 2) return false;
-        return board[row][col] == '-';
-    }
-
-    // ── Reused from UC6 ──────────────────────────────────────────
-    static void placeMove(int row, int col, char symbol) {
-        board[row][col] = symbol;
-    }
+    static boolean checkWin(char symbol) { /* UC6 */ return false; }
 }

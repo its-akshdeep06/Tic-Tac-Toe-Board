@@ -1,84 +1,64 @@
 /**
  * TicTacToe
- * UC8 controls the continuous game loop and alternates
- * turns until the game ends.
+ * UC9 checks whether a player has won by examining
+ * rows, columns, and diagonals.
  */
 public class TicTacToe {
 
-    static boolean isHumanTurn = true;
-    static boolean gameOver = false;
-
-    // --- Assumed to exist from UC1–UC7 ---
     static char[][] board = new char[3][3];
-    static char humanSymbol;
-    static char computerSymbol;
 
     /**
-     * Entry point of the program. Demonstrates the structure
-     * of a continuous game loop.
+     * Entry point of the program. Tests the win-check logic.
      */
     public static void main(String[] args) {
-        initializeBoard();
-        tossAndAssignSymbols();
-        displayTossResult();
-        printBoard();
+        // Test: X wins via top row
+        board[0][0] = 'X'; board[0][1] = 'X'; board[0][2] = 'X';
+        board[1][0] = 'O'; board[1][1] = 'O'; board[1][2] = '-';
+        board[2][0] = '-'; board[2][1] = '-'; board[2][2] = '-';
 
-        startGameLoop();
+        System.out.println("Has X won? " + hasWon('X')); // true
+        System.out.println("Has O won? " + hasWon('O')); // false
     }
 
     /**
-     * UC8 Core: Runs the game loop, alternating turns between human
-     * and computer until a win or draw condition is detected.
+     * Checks all possible winning patterns for the given symbol.
+     * Input: Player symbol
+     * Output: true if win detected.
      */
-    static void startGameLoop() {
-        int totalMoves = 0; // tracks filled cells to detect draw
+    static boolean hasWon(char symbol) {
 
-        while (!gameOver) {
-
-            if (isHumanTurn) {
-                System.out.println("\n>> Your turn (" + humanSymbol + ")");
-                humanMove();
-            } else {
-                System.out.println("\n>> Computer's turn (" + computerSymbol + ")");
-                computerMove();
-            }
-
-            totalMoves++;
-            printBoard();
-
-            // Check win
-            if (checkWin(isHumanTurn ? humanSymbol : computerSymbol)) {
-                if (isHumanTurn) {
-                    System.out.println("🎉 You win!");
-                } else {
-                    System.out.println("💻 Computer wins!");
-                }
-                gameOver = true;
-
-            // Check draw
-            } else if (totalMoves == 9) {
-                System.out.println("🤝 It's a draw!");
-                gameOver = true;
-
-            // Switch turn
-            } else {
-                isHumanTurn = !isHumanTurn;
+        // Check all 3 rows
+        for (int row = 0; row < 3; row++) {
+            if (board[row][0] == symbol &&
+                board[row][1] == symbol &&
+                board[row][2] == symbol) {
+                return true;
             }
         }
 
-        System.out.println("Game Over. Thanks for playing!");
+        // Check all 3 columns
+        for (int col = 0; col < 3; col++) {
+            if (board[0][col] == symbol &&
+                board[1][col] == symbol &&
+                board[2][col] == symbol) {
+                return true;
+            }
+        }
+
+        // Check main diagonal (top-left → bottom-right)
+        if (board[0][0] == symbol &&
+            board[1][1] == symbol &&
+            board[2][2] == symbol) {
+            return true;
+        }
+
+        // Check anti-diagonal (top-right → bottom-left)
+        if (board[0][2] == symbol &&
+            board[1][1] == symbol &&
+            board[2][0] == symbol) {
+            return true;
+        }
+
+        return false;
     }
-
-    // -------------------------------------------------------
-    // Stub placeholders — implemented in UC3–UC7
-    // -------------------------------------------------------
-
-    static void initializeBoard() { /* UC1 */ }
-    static void tossAndAssignSymbols() { /* UC2 */ }
-    static void displayTossResult() { /* UC2 */ }
-    static void printBoard() { /* UC1 */ }
-    static void humanMove() { /* UC3 */ }
-    static void computerMove() { /* UC4/UC5 */ }
-
-    static boolean checkWin(char symbol) { /* UC6 */ return false; }
 }

@@ -1,64 +1,43 @@
 /**
  * TicTacToe
- * UC9 checks whether a player has won by examining
- * rows, columns, and diagonals.
+ * UC10 checks whether the game has ended in a draw
+ * by ensuring no empty cells remain on the board.
  */
 public class TicTacToe {
 
     static char[][] board = new char[3][3];
 
     /**
-     * Entry point of the program. Tests the win-check logic.
+     * Entry point of the program. Tests draw detection logic.
      */
     public static void main(String[] args) {
-        // Test: X wins via top row
-        board[0][0] = 'X'; board[0][1] = 'X'; board[0][2] = 'X';
-        board[1][0] = 'O'; board[1][1] = 'O'; board[1][2] = '-';
-        board[2][0] = '-'; board[2][1] = '-'; board[2][2] = '-';
 
-        System.out.println("Has X won? " + hasWon('X')); // true
-        System.out.println("Has O won? " + hasWon('O')); // false
+        // Test 1: Full board — should be a draw
+        board[0][0] = 'X'; board[0][1] = 'O'; board[0][2] = 'X';
+        board[1][0] = 'X'; board[1][1] = 'O'; board[1][2] = 'O';
+        board[2][0] = 'O'; board[2][1] = 'X'; board[2][2] = 'X';
+        System.out.println("Test 1 (full board)  → isDraw: " + isDraw()); // true
+
+        // Test 2: One empty cell — not a draw yet
+        board[2][2] = '-';
+        System.out.println("Test 2 (one empty)   → isDraw: " + isDraw()); // false
+
+        // Test 3: Entirely empty board — not a draw
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++)
+                board[r][c] = '-';
+        System.out.println("Test 3 (empty board) → isDraw: " + isDraw()); // false
     }
 
     /**
-     * Checks all possible winning patterns for the given symbol.
-     * Input: Player symbol
-     * Output: true if win detected.
+     * Traverses the board to check for any remaining empty cells.
+     * Output: true if draw, false otherwise.
      */
-    static boolean hasWon(char symbol) {
-
-        // Check all 3 rows
-        for (int row = 0; row < 3; row++) {
-            if (board[row][0] == symbol &&
-                board[row][1] == symbol &&
-                board[row][2] == symbol) {
-                return true;
-            }
-        }
-
-        // Check all 3 columns
-        for (int col = 0; col < 3; col++) {
-            if (board[0][col] == symbol &&
-                board[1][col] == symbol &&
-                board[2][col] == symbol) {
-                return true;
-            }
-        }
-
-        // Check main diagonal (top-left → bottom-right)
-        if (board[0][0] == symbol &&
-            board[1][1] == symbol &&
-            board[2][2] == symbol) {
-            return true;
-        }
-
-        // Check anti-diagonal (top-right → bottom-left)
-        if (board[0][2] == symbol &&
-            board[1][1] == symbol &&
-            board[2][0] == symbol) {
-            return true;
-        }
-
-        return false;
+    static boolean isDraw() {
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++)
+                if (board[r][c] == '-')
+                    return false;   // found an empty cell — game still ongoing
+        return true;                // no empty cell found — board is full
     }
 }
